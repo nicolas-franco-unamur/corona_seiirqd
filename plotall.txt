@@ -1,0 +1,81 @@
+#Corona seiirqd covid-19 program
+#Exemple of simple Gnuplot script
+#Copyright Nicolas Franco - UNamur 2020-2021
+#Public version 1.0 (28/04/2021)
+#Version corresponding to the scientific paper:
+#"Covid-19 Belgium: Extended SEIR-QD model with nursing homes and long-term scenarios-based forecasts"
+#https://doi.org/10.1101/2020.09.07.20190108
+
+
+reset
+set multiplot
+set xrange [-18: 246]
+unset logscale y
+set yrange [1:12000]
+set xtics ("Mar" 1, "Apr" 32, "May" 62, "June" 93, "Jul" 123, "Aug" 154, "Sept" 185, "Oct" 215, "Nov" 246, "Dec" 276, "Jan" 307, "Feb" 338, "Mar" 366, "April" 397, "May" 427, "June" 458) out left
+
+set xlabel "Calendar time"
+set ylabel "Number of people"
+
+set style line 1 lt 2 lc rgb "blue" lw 3
+set style line 2 lt 3 lc rgb "dark-green" lw 3
+set style line 3 lt 3 lc rgb "red" lw 3
+set style line 4 lt 4 lc rgb "orange" lw 3
+set style line 5 lt 5 lc rgb "dark-orange" lw 3
+set style line 6 lt 5 lc rgb "dark-violet" lw 3
+set style line 7 lt 5 lc rgb "purple" lw 3
+set style line 8 lt 5 lc rgb "violet" lw 3
+set style line 9 lt 5 lc rgb "brown" lw 3
+
+set style line 11 lt 2 dt 2 lc rgb "blue" lw 1.5
+set style line 12 lt 3 dt 2 lc rgb "dark-green" lw 1.5
+set style line 13 lt 3 dt 2 lc rgb "red" lw 1.5
+set style line 14 lt 4 dt 2 lc rgb "orange" lw 1.5
+set style line 15 lt 5 dt 2 lc rgb "dark-orange" lw 1.5
+set style line 16 lt 5 dt 2 lc rgb "dark-violet" lw 1.5
+set style line 17 lt 5 dt 2 lc rgb "purple" lw 1.5
+set style line 18 lt 5 dt 2 lc rgb "violet" lw 1.5
+set style line 19 lt 5 dt 2 lc rgb "brown" lw 1.5
+
+
+set style line 21 lt 2 lc rgb "black" lw 2
+set style line 22 lt 3 lc rgb "black" lw 1
+set style line 23 lt 3 lc rgb "black" lw 2.5
+set style line 24 lt 5 lc rgb "black" lw 2.5
+set style line 25 lt 1 lc rgb "black" lw 2.5
+set style line 26 lt 6 lc rgb "black" lw 2.5
+set style line 27 lt 8 lc rgb "black" lw 2.5
+
+set style line 50 lt 5 dt 2 lc rgb "red" lw 2.5
+set style line 51 lt 5 dt 3 lc rgb "red" lw 2.5
+
+set size 1, 1
+#set title "Forecast: October 15 - Data: October 18" offset 10,-2
+#set xlabel "Day 1 = March 1" offset -38,1.5
+set key font ",16"
+set key at 55,11800
+set tmargin 1
+
+set style line 100 lt 2 dt 2lc rgb "light-grey" lw 0.5
+set grid back ls 100
+set size 1, 1
+
+
+perc=5
+infile = sprintf('plot/p%d.txt',perc)
+plot infile using 1:8 with lines notitle ls 11, infile using 1:61 with lines notitle ls 12, infile using 1:9 with lines notitle ls 13, infile using 1:58 with lines notitle ls 19 , infile using 1:57 with lines notitle ls 14,  infile using 1:49 with lines notitle ls 15, infile using 1:41 with lines notitle ls 16,infile using 1:33 with lines notitle ls 17, infile using 1:25 with lines notitle ls 18
+
+perc=95
+infile = sprintf('plot/p%d.txt',perc)
+plot infile using 1:8 with lines notitle ls 11, infile using 1:61 with lines notitle ls 12, infile using 1:9 with lines notitle ls 13, infile using 1:58 with lines notitle ls 19 , infile using 1:57 with lines notitle ls 14,  infile using 1:49 with lines notitle ls 15, infile using 1:41 with lines notitle ls 16,infile using 1:33 with lines notitle ls 17, infile using 1:25 with lines notitle ls 18
+
+#data
+plot "data.txt" using 1:6 notitle ls 22,  "data.txt" using 1:8 ls 22 notitle,  "data.txt" using 1:14 notitle ls 22,  "data.txt" using 1:21 notitle ls 22, "data.txt" using 1:22 notitle ls 22, "data.txt" using 1:23 notitle ls 22, "data.txt" using 1:($24-$12) notitle ls 22, "data.txt" using 1:12 notitle ls 22, "data.txt" using 1:24 notitle ls 22
+
+#median 
+perc=50
+infile = sprintf('plot/p%d.txt',perc)
+plot infile using 1:8 with lines title "Patients in hospital" ls 1, infile using 1:61 with lines title "Discharged" ls 2, infile using 1:9 with lines title "Total deaths" ls 3, infile using 1:58 with lines title "Deaths 75+ (total)" ls 9 , infile using 1:57 with lines title "Deaths nurs. homes" ls 4,  infile using 1:49 with lines title "Deaths 75+ hosp." ls 5, infile using 1:41 with lines title "Deaths 65-74" ls 6,infile using 1:33 with lines title "Deaths 45-64" ls 7, infile using 1:25 with lines title "Deaths 25-44" ls 8
+
+
+unset multiplot
